@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+</head>
+<body>
+    <h1>5S Audit Responses</h1>
+
+    <!-- Show Department, Date, and Email -->
+    <p><strong>Department:</strong> {{ department }}</p>
+    <p><strong>Date:</strong> {{ date }}</p>
+    <p><strong>Email:</strong> {{ email }}</p>
+    <hr>
+
+    <!-- Loop through each question -->
+    {% for i in range(questions|length) %}
+        <h3>{{ i+1 }}. {{ questions[i] }}</h3>
+        <p><strong>Comment:</strong> {{ answers[i] }}</p>
+        <p><strong>Rating:</strong> {{ ratings[i] }}</p>
+
+        {% if images['q' + i|string] %}
+            <h4>Uploaded Images:</h4>
+            {% for image in images['q' + i|string] %}
+                <img src="{{ url_for('static', filename='uploads/' + image) }}" width="200">
+            {% endfor %}
+        {% endif %}
+        <hr>
+    {% endfor %}
+
+    <!-- Download PDF Form -->
+    <form action="{{ url_for('download_pdf') }}" method="POST">
+        <input type="hidden" name="answers" value='{{ answers|tojson }}'>
+        <input type="hidden" name="ratings" value='{{ ratings|tojson }}'>
+        <input type="hidden" name="images" value='{{ images|tojson }}'>
+        <button type="submit">Download PDF</button>
+    </form>
+</body>
+</html>
+
+
