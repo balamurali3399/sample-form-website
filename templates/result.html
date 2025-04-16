@@ -2,6 +2,13 @@
 <html>
 <head>
     <title>Results</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .right-align {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>5S Audit Responses</h1>
@@ -27,13 +34,20 @@
         <hr>
     {% endfor %}
 
-    <!-- Download PDF Form -->
-    <form action="{{ url_for('download_pdf') }}" method="POST">
+    <!-- Right-Aligned Download Button -->
+    <div class="right-align">
+      <form action="{{ url_for('download_pdf') }}" method="POST">
         <input type="hidden" name="answers" value='{{ answers|tojson }}'>
         <input type="hidden" name="ratings" value='{{ ratings|tojson }}'>
         <input type="hidden" name="images" value='{{ images|tojson }}'>
-        <button type="submit">Download PDF</button>
+        <input type="hidden" name="department" value="{{ department }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="date" value="{{ date }}">
+        <button type="submit" style="float: right;">Submit your responce</button>
     </form>
+    
+    
+    </div>
 </body>
 </html>
 

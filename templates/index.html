@@ -10,30 +10,42 @@
         <!-- Text-only fields -->
         {% for field in ['Department', 'Date', 'Email'] %}
             <label>{{ field }}:</label><br>
-            <input type="text" name="{{ field.lower() }}" required><br><br>
+            <input type="text" name="{{ field.lower() }}"><br><br>
         {% endfor %}
 
         <!-- Main audit questions -->
         {% for q in questions %}
-            <h3>{{ loop.index }}. {{ q }}</h3>
+        <h3>{{ loop.index }}. {{ q }}</h3>
+    
+        <label>Rating:</label><br>
+        <select name="rating_{{ loop.index0 }}">
+            <option value="">-- Select Rating --</option>
+            {% for r in range(1, rating_ranges[loop.index0] + 1) %}
+                <option value="{{ r }}">{{ r }}</option>
+            {% endfor %}
+        </select><br><br>
+    
+        <label>Upload Images or Take Photo:</label><br>
+        <input 
+            type="file" 
+            name="image_{{ loop.index0 }}" 
+            accept="image/*" 
+            capture="environment" 
+            multiple><br><br>
+    
+        <label>Select Image Tag:</label><br>
+        <select name="image_tag_{{ loop.index0 }}">
+            <option value="">-- Select Tag --</option>
+            <option value="Before">Before</option>
+            <option value="After">After</option>
+            <option value="Issue">Issue</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+    
+        <hr>
+    {% endfor %}    
 
-            <label>Comment:</label><br>
-            <input type="text" name="answer_{{ loop.index0 }}" required><br><br>
-
-            <label>Rating:</label><br>
-            <select name="rating_{{ loop.index0 }}" required>
-                <option value="">-- Select Rating --</option>
-                {% for r in range(1, rating_ranges[loop.index0] + 1) %}
-                    <option value="{{ r }}">{{ r }}</option>
-                {% endfor %}
-            </select><br><br>
-
-            <label>Upload Images (Max 10):</label>
-            <input type="file" name="image_{{ loop.index0 }}" multiple><br><br>
-            <hr>
-        {% endfor %}
-
-        <button type="submit">Submit</button>
+        <button type="submit">NEXT</button>
     </form>
 </body>
 </html>

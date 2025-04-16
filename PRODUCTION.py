@@ -33,9 +33,9 @@ questions = [
 
 rating_ranges = [
     10,
-    5,5,  # Questions 1–5: Rating 1–5
-    10,  # 6–10: Rating 1–10
-    5,5,  # 11–15
+    5,5,
+    10,  
+    5,5,  
     10,10,
     5,
     10,10,10,
@@ -86,27 +86,44 @@ def submit():
 
 @app.route('/download', methods=['POST'])
 def download_pdf():
+    import re  # For safe filename
     answers = json.loads(request.form['answers'])
     ratings = json.loads(request.form['ratings'])
     images = json.loads(request.form['images'])
-    department = request.form.get('department', '')
-    date = request.form.get('date', '')
-    email = request.form.get('email', '')
+    department = request.form.get('department', 'UnknownDepartment')
+    email = request.form.get('email', 'unknown@example.com')
 
+    # Sanitize values for file system safety
+    safe_email = re.sub(r'[^\w\-_\.]', '_', email)
+    safe_department = re.sub(r'[^\w\-_\.]', '_', department)
+
+    # Define your OneDrive base path here
+    base_dir = r'D:\one drive folder'
+
+    # Full path for user's email folder
+    user_folder = os.path.join(base_dir, safe_email)
+
+    # Create folder if it doesn't exist
+    os.makedirs(user_folder, exist_ok=True)
+
+    # Define PDF path using department name inside user's folder
+    pdf_path = os.path.join(user_folder, f"{safe_department}.pdf")
+
+    # Render HTML using result template
     rendered_html = render_template(
-        'result.html',
+        'pdf_template.html',  # Make sure this template exists
         questions=questions,
         answers=answers,
         ratings=ratings,
         images=images,
         department=department,
-        date=date,
         email=email
     )
 
-    pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], 'audit_report.pdf')
+    # Generate PDF
     pdfkit.from_string(rendered_html, pdf_path)
 
+    # Return the file as download
     return send_file(pdf_path, as_attachment=True)
 
 if __name__ == '__main__':
