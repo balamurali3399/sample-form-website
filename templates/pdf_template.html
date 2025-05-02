@@ -46,18 +46,17 @@
     <hr>
 
     {% for i in range(questions|length) %}
-        <div class="question-block">
-            <p><strong>Q{{ i+1 }}: {{ questions[i] }}</strong></p>
-            <p class="rating">Rating: {{ ratings[i] }}</p>
-            <p><strong>Comment:</strong> {{ answers[i] }}</p>
-
-            {% if images['q' ~ i] %}
-                {% for image in images['q' ~ i] %}
-                    <img src="{{ url_for('static', filename='uploads/' ~ image) }}">
-                {% endfor %}
-            {% endif %}
-        </div>
-        <hr>
-    {% endfor %}
+    <h3>Q{{ i+1 }}: {{ questions[i] }}</h3>
+    <p><strong>Rating:</strong> {{ ratings[i] }}</p>
+    
+    {% set q_key = 'q' ~ i %}
+    {% if base64_images[q_key] %}
+        <p>Uploaded Images:</p>
+        {% for img in base64_images[q_key] %}
+            <img src="data:image/jpeg;base64,{{ img }}" style="width: 200px; height: auto;"/>
+        {% endfor %}
+    {% endif %}
+    <hr>
+{% endfor %}
 </body>
 </html>
