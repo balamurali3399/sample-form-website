@@ -22,13 +22,13 @@
     <!-- Loop through each question -->
     {% for i in range(questions|length) %}
         <h3>{{ i+1 }}. {{ questions[i] }}</h3>
-        <p><strong>Comment:</strong> {{ answers[i] }}</p>
+        <!-- <p><strong>Comment:</strong> {{ answers[i] }}</p> -->
         <p><strong>Rating:</strong> {{ ratings[i] }}</p>
 
         {% if images['q' + i|string] %}
             <h4>Uploaded Images:</h4>
             {% for image in images['q' + i|string] %}
-                <img src="{{ url_for('static', filename='uploads/' + image) }}" width="200">
+            <img src="{{ url_for('static', filename='uploads/' ~ image) }}" width="200">
             {% endfor %}
         {% endif %}
         <hr>
@@ -36,19 +36,31 @@
 
     <!-- Right-Aligned Download Button -->
     <div class="right-align">
-      <form action="{{ url_for('download_pdf') }}" method="POST">
-        <input type="hidden" name="answers" value='{{ answers|tojson }}'>
-        <input type="hidden" name="ratings" value='{{ ratings|tojson }}'>
-        <input type="hidden" name="images" value='{{ images|tojson }}'>
-        <input type="hidden" name="department" value="{{ department }}">
-        <input type="hidden" name="email" value="{{ email }}">
-        <input type="hidden" name="date" value="{{ date }}">
-        <button type="submit" style="float: right;">Submit your responce</button>
-    </form>
-    
-    
+        <form action="{{ url_for('download_pdf') }}" method="POST">
+            <input type="hidden" name="answers" value='{{ answers | tojson | safe }}'>
+            <input type="hidden" name="ratings" value='{{ ratings | tojson | safe }}'>
+            <input type="hidden" name="images" value='{{ images | tojson | safe }}'>
+            <input type="hidden" name="department" value="{{ department }}">
+            <input type="hidden" name="email" value="{{ email }}">
+            <input type="hidden" name="date" value="{{ date }}">
+            
+            <button 
+                type="submit" 
+                style="
+                    float: right;
+                    background-color: #4CAF50; /* Green */
+                    color: white;
+                    padding: 12px 24px;
+                    font-size: 16px;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                ">
+                Submit your response
+            </button>
+        </form>
+    </div>
     </div>
 </body>
 </html>
-
-
